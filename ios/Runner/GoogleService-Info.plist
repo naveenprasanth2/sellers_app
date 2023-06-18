@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1097011694914-opgbse8qf1g678k8ppm1j3v4od79bflp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1097011694914-opgbse8qf1g678k8ppm1j3v4od79bflp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA3m-70-uQTG6zYdilQ5Nwv3tQpxSeyWZE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1097011694914</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>in.bookany.sellersApp</string>
+	<key>PROJECT_ID</key>
+	<string>clone-c3dbe</string>
+	<key>STORAGE_BUCKET</key>
+	<string>clone-c3dbe.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1097011694914:ios:9f6c92e991eada674cccdb</string>
+</dict>
+</plist>

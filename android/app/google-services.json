@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1097011694914",
+    "project_id": "clone-c3dbe",
+    "storage_bucket": "clone-c3dbe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097011694914:android:f74fb80f9639e2c84cccdb",
+        "android_client_info": {
+          "package_name": "in.bookany.sellers_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097011694914-tqpu0ve3e7n15u0js51gh5ohlu9nh5mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbWE99Muh5O9hrq6bDRUTeh6uMzEFJM6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097011694914-tqpu0ve3e7n15u0js51gh5ohlu9nh5mi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1097011694914-c65cfp71sflt68uaa1ub8j968gs3529t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.bookany.usersApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1097011694914:android:785ce47671be3ebb4cccdb",
+        "android_client_info": {
+          "package_name": "in.bookany.users_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1097011694914-tqpu0ve3e7n15u0js51gh5ohlu9nh5mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbWE99Muh5O9hrq6bDRUTeh6uMzEFJM6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1097011694914-tqpu0ve3e7n15u0js51gh5ohlu9nh5mi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1097011694914-c65cfp71sflt68uaa1ub8j968gs3529t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.bookany.usersApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,13 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sellers_app/brandsScreens/home_screen.dart';
+import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/widgets/progress_bar.dart';
 
 class UploadBrandsScreen extends StatefulWidget {
   const UploadBrandsScreen({super.key});
@@ -12,8 +17,69 @@ class UploadBrandsScreen extends StatefulWidget {
 }
 
 class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
+  TextEditingController brandInfoTextEditingController =
+      TextEditingController();
+  TextEditingController brandTitleTextEditingController =
+      TextEditingController();
   XFile? _imgXFile;
   final ImagePicker _imagePicker = ImagePicker();
+  bool uploading = false;
+  final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  String? downloadUrlImage;
+  String brandUniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+
+  saveBrandInfo() {
+    _firebaseFirestore
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("brands")
+        .doc(brandUniqueID)
+        .set({
+      "brandId": brandUniqueID,
+      "sellerUid": sharedPreferences!.getString("uid"),
+      "brandInfo": brandInfoTextEditingController.text.trim(),
+      "brandTitle": brandTitleTextEditingController.text.trim(),
+      "publishDate": DateTime.now(),
+      "status": "available",
+      "thumbnailUrl": downloadUrlImage
+    });
+    setState(() {
+      uploading = false;
+      //make sure to update this unique id as its initialized once in class level only
+      //so below line gives new id
+      brandUniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+      Navigator.push(
+          context, MaterialPageRoute(builder: (e) => const HomeScreen()));
+    });
+  }
+
+  validateUploadForm() async {
+    if (_imgXFile != null) {
+      if (brandInfoTextEditingController.text.isNotEmpty &&
+          brandTitleTextEditingController.text.isNotEmpty) {
+        setState(() {
+          uploading = true;
+        });
+        //upload a new image to firebase storage
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        Reference storageRef =
+            _firebaseStorage.ref().child("sellersBrandsImages").child(fileName);
+        UploadTask uploadTask = storageRef.putFile(File(_imgXFile!.path));
+        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+        await taskSnapshot.ref.getDownloadURL().then((urlImage) {
+          downloadUrlImage = urlImage;
+        });
+
+        //save brand info to firebase database
+        saveBrandInfo();
+      } else {
+        Fluttertoast.showToast(msg: "Please enter all brand details");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Please upload a brand image please");
+    }
+  }
 
   uploadFormScreen() {
     return Scaffold(
@@ -25,6 +91,17 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
                 context, MaterialPageRoute(builder: (e) => const HomeScreen()));
           },
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: IconButton(
+              onPressed: () {
+                uploading == true ? null : validateUploadForm();
+              },
+              icon: const Icon(Icons.cloud_upload),
+            ),
+          )
+        ],
         title: const Text("Upload New Brand"),
         centerTitle: true,
         flexibleSpace: Container(
@@ -38,9 +115,10 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
       ),
       body: ListView(
         children: [
-          Container(
-            padding: const EdgeInsets.only(top: 10),
-            height: 230,
+          //this gives linear progress bar to upload
+          uploading == true ? linearProgressBar() : Container(),
+          SizedBox(
+            height: 250,
             width: MediaQuery.of(context).size.width * 0.8,
             child: Center(
               child: AspectRatio(
@@ -55,6 +133,50 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
                 ),
               ),
             ),
+          ),
+          const Divider(
+            color: Colors.pinkAccent,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.info,
+              color: Colors.deepPurple,
+            ),
+            title: SizedBox(
+              width: 250,
+              child: TextField(
+                controller: brandInfoTextEditingController,
+                decoration: const InputDecoration(
+                    hintText: "Brand Info",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none),
+              ),
+            ),
+          ),
+          const Divider(
+            color: Colors.pinkAccent,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.title,
+              color: Colors.deepPurple,
+            ),
+            title: SizedBox(
+              width: 250,
+              child: TextField(
+                controller: brandTitleTextEditingController,
+                decoration: const InputDecoration(
+                    hintText: "Brand Title",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    border: InputBorder.none),
+              ),
+            ),
+          ),
+          const Divider(
+            color: Colors.pinkAccent,
+            thickness: 1,
           ),
         ],
       ),
@@ -138,7 +260,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
               SimpleDialogOption(
                 onPressed: () {
                   getImageFromGallery();
-                  Navigator.pop(context);
+                  getImageFromGallery();
                 },
                 child: const Text(
                   "Upload from Gallery",
@@ -160,14 +282,25 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
   }
 
   void getImageFromGallery() async {
-    _imgXFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+    _imgXFile = await _imagePicker
+        .pickImage(
+      source: ImageSource.gallery,
+    )
+        .then((value) {
+      Navigator.pop(context);
+      return value;
+    });
     setState(() {
       _imgXFile;
     });
   }
 
   void getImageFromCamera() async {
-    _imgXFile = await _imagePicker.pickImage(source: ImageSource.camera);
+    _imgXFile =
+        await _imagePicker.pickImage(source: ImageSource.camera).then((value) {
+      Navigator.pop(context);
+      return value;
+    });
     setState(() {
       _imgXFile;
     });

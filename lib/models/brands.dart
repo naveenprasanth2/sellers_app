@@ -21,7 +21,7 @@ class Brands {
   Brands.fromJson(Map<String, dynamic> json) {
     brandId = json["brandId"];
     brandInfo = json["brandInfo"];
-    brandTitle = json["brandInfo"];
+    brandTitle = json["brandTitle"];
     publishDate = json["publishDate"];
     sellerUid = json["sellerUid"];
     status = json["status"];

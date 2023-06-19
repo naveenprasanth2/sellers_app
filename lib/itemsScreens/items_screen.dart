@@ -58,6 +58,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
         ],
       ),
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPersistentHeader(
             pinned: true,

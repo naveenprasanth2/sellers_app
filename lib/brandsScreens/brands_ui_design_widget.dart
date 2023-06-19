@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sellers_app/brandsScreens/home_screen.dart';
 import 'package:sellers_app/itemsScreens/items_screen.dart';
+import 'package:sellers_app/splashScreen/splash_screen.dart';
 
+import '../global/global.dart';
 import '../models/brands.dart';
 
 class BrandsUiDesignWidget extends StatefulWidget {
@@ -20,6 +24,20 @@ class BrandsUiDesignWidget extends StatefulWidget {
 }
 
 class _BrandsUiDesignWidgetState extends State<BrandsUiDesignWidget> {
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  deleteBrand() {
+    _firebaseFirestore
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("brands")
+        .doc(widget.model!.brandId)
+        .delete();
+    Navigator.push(
+        context, MaterialPageRoute(builder: (e) => const SplashScreen()));
+    Fluttertoast.showToast(msg: "Brand deleted.");
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -27,7 +45,9 @@ class _BrandsUiDesignWidgetState extends State<BrandsUiDesignWidget> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (e) => ItemsScreen(model: widget.model,)));
+                builder: (e) => ItemsScreen(
+                      model: widget.model,
+                    )));
       },
       child: Card(
         elevation: 10,
@@ -60,7 +80,9 @@ class _BrandsUiDesignWidgetState extends State<BrandsUiDesignWidget> {
                       ),
                     ),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          deleteBrand();
+                        },
                         icon: const Icon(
                           Icons.delete_sweep,
                           color: Colors.pinkAccent,

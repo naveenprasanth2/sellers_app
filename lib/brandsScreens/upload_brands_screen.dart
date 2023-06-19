@@ -49,6 +49,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
       //make sure to update this unique id as its initialized once in class level only
       //so below line gives new id
       brandUniqueID = DateTime.now().millisecondsSinceEpoch.toString();
+      Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.push(
           context, MaterialPageRoute(builder: (e) => const HomeScreen()));
     });

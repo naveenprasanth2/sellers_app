@@ -1,6 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sellers_app/brandsScreens/home_screen.dart';
+import 'package:sellers_app/itemsScreens/items_screen.dart';
+import 'package:sellers_app/splashScreen/splash_screen.dart';
 
+import '../global/global.dart';
 import '../models/Items.dart';
+import '../models/brands.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
   Items? model;
@@ -12,6 +19,31 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  deleteItem() {
+    _firebaseFirestore
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("brands")
+        .doc(widget.model!.brandId)
+        .collection("items")
+        .doc(widget.model!.itemId)
+        .delete()
+        .then((value) {
+      _firebaseFirestore
+          .collection("items")
+          .doc(widget.model!.itemId)
+          .delete()
+          .then((value) {
+        Fluttertoast.showToast(
+            msg: "the item ${widget.model!.itemTitle} is deleted successfully");
+      });
+      Navigator.push(
+          context, MaterialPageRoute(builder: (e) => const HomeScreen()));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +59,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          deleteItem();
+        },
         label: const Text("Delete this item"),
         icon: const Icon(Icons.delete_sweep),
         backgroundColor: Colors.pinkAccent,

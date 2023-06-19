@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           slivers: [
             const SliverPersistentHeader(
               pinned: true,

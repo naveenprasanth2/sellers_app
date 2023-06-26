@@ -19,6 +19,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
+  getSellerEarningsFromDatabase() {
+    _firebaseFirestore.collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .get().then((dataSnapshot) {
+      previousEarnings = dataSnapshot.data()!["earnings"].toString();
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getSellerEarningsFromDatabase();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       Brands brandsModel = Brands.fromJson(
                           dataSnapShot.data.docs[index].data()
-                              as Map<String, dynamic>);
+                          as Map<String, dynamic>);
                       return BrandsUiDesignWidget(
                         context: context,
                         model: brandsModel,
@@ -90,8 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   //as we are using slivers make sure using sliverToBoxAdapter
                   return const SliverToBoxAdapter(
                       child: Center(
-                    child: Text("No brands exists"),
-                  ));
+                        child: Text("No brands exists"),
+                      ));
                 }
               },
             )

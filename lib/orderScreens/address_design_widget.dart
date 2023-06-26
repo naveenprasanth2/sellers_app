@@ -1,26 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/helper/sizebox_helper.dart';
 
 import '../models/address.dart';
 
 class AddressDesign extends StatelessWidget {
-  Address? addressModel;
-  String? orderStatus;
-  String? orderId;
-  String? sellerId;
-  String? orderByUser;
+  final Address? addressModel;
+  final String? orderStatus;
+  final String? orderId;
+  final String? sellerId;
+  final String? orderByUser;
+  final String? totalAmount;
 
-  AddressDesign({
-    super.key,
-    this.addressModel,
-    this.orderStatus,
-    this.orderId,
-    this.sellerId,
-    this.orderByUser,
-  });
+  const AddressDesign(
+      {super.key,
+      this.addressModel,
+      this.orderStatus,
+      this.orderId,
+      this.sellerId,
+      this.orderByUser,
+      this.totalAmount});
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     return Column(
       children: [
         const Padding(
@@ -95,13 +100,35 @@ class AddressDesign extends StatelessWidget {
         SizedBoxHelper.sizeBox40,
         GestureDetector(
           onTap: () {
-            orderStatus == "ended"
-                ? Navigator.pop(context)
-                : orderStatus == "shifted"
-                    ? "Confirm Delivered"
-                    : orderStatus == "normal"
-                        ? Navigator.pop(context)
-                        : Navigator.pop(context);
+            if (orderStatus == "ended") {
+              Navigator.pop(context);
+            } else if (orderStatus == "shifted") {
+              Navigator.pop(context);
+            } else if (orderStatus == "normal") {
+              firebaseFirestore
+                  .collection("sellers")
+                  .doc(sharedPreferences!.getString("uid"))
+                  .update({
+                "earnings": (double.parse(previousEarnings) +
+                        double.parse(totalAmount!))
+                    .toString(),
+              }).whenComplete(() {
+                firebaseFirestore.collection("orders").doc(orderId).update({
+                  "status": "shifted",
+                }).whenComplete(() {
+                  firebaseFirestore
+                      .collection("users")
+                      .doc(orderByUser)
+                      .collection("orders")
+                      .doc(orderId)
+                      .update({"status": "shifted"});
+                }).whenComplete(() {
+                  //todo notification to the user
+                  Fluttertoast.showToast(msg: "Order status updated successfully");
+                  Navigator.pop(context);
+                });
+              });
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -116,11 +143,11 @@ class AddressDesign extends StatelessWidget {
               child: Center(
                 child: Text(
                   orderStatus == "ended"
-                      ? "Rate the seller"
+                      ? "Go Back"
                       : orderStatus == "shifted"
-                          ? "Confirm Delivered"
+                          ? "Go Back"
                           : orderStatus == "normal"
-                              ? "Go Back"
+                              ? "Confirm Shipment"
                               : "",
                   textAlign: TextAlign.center,
                   style: const TextStyle(

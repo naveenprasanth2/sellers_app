@@ -25,10 +25,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: _firebaseFirestore
-              .collection("orders")
-              .doc(widget.orderId)
-              .get(),
+          future:
+              _firebaseFirestore.collection("orders").doc(widget.orderId).get(),
           builder: (c, AsyncSnapshot dataSnapshot) {
             Map? orderDataMap;
             if (dataSnapshot.hasData) {
@@ -69,8 +67,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     color: Colors.pinkAccent,
                   ),
                   orderStatus == "ended"
-                      ? Image.asset("assets/delivered.png")
-                      : Image.asset("assets/state.png"),
+                      ? Image.asset("assets/delivered.jpg")
+                      : Image.asset("assets/packing.jpg"),
                   const Divider(
                     thickness: 2,
                     color: Colors.pinkAccent,
@@ -85,13 +83,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     builder: (c, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         return AddressDesign(
-                          addressModel: Address.fromJson(
-                              snapshot.data.data() as Map<String, dynamic>),
-                          orderStatus: orderDataMap!["status"].toString(),
-                          orderId: orderDataMap["orderId"],
-                          orderByUser: orderDataMap["orderBy"],
-                          sellerId: orderDataMap["sellerUid"]
-                        );
+                            addressModel: Address.fromJson(
+                                snapshot.data.data() as Map<String, dynamic>),
+                            orderStatus: orderDataMap!["status"].toString(),
+                            orderId: orderDataMap["orderId"],
+                            orderByUser: orderDataMap["orderBy"],
+                            sellerId: orderDataMap["sellerUid"],
+                            totalAmount: orderDataMap["totalAmount"]);
                       } else {
                         return const Center(
                             child: Text("OOPS!No Address exists"));

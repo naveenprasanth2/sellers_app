@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sellers_app/brandsScreens/home_screen.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/helper/sizebox_helper.dart';
+import 'package:sellers_app/orderScreens/orders_screen.dart';
 import 'package:sellers_app/splashScreen/splash_screen.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -62,7 +64,12 @@ class MyDrawer extends StatelessWidget {
                       "Home",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const HomeScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,
@@ -80,7 +87,12 @@ class MyDrawer extends StatelessWidget {
                       "My Orders",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const OrdersScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,

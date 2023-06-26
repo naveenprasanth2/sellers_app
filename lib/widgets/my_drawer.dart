@@ -6,6 +6,8 @@ import 'package:sellers_app/helper/sizebox_helper.dart';
 import 'package:sellers_app/orderScreens/orders_screen.dart';
 import 'package:sellers_app/splashScreen/splash_screen.dart';
 
+import '../shiftedOrders/shifted_orders_screen.dart';
+
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
@@ -107,10 +109,15 @@ class MyDrawer extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: const Text(
-                      "Not yet received orders",
+                      "Shifted orders",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const ShiftedOrdersScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,

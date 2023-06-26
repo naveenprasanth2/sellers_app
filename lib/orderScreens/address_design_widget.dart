@@ -116,11 +116,11 @@ class AddressDesign extends StatelessWidget {
               child: Center(
                 child: Text(
                   orderStatus == "ended"
-                      ? "Rate the seller"
+                      ? "Go Back"
                       : orderStatus == "shifted"
-                          ? "Confirm Delivered"
+                          ? "Go Back"
                           : orderStatus == "normal"
-                              ? "Go Back"
+                              ? "Confirm Shipment"
                               : "",
                   textAlign: TextAlign.center,
                   style: const TextStyle(

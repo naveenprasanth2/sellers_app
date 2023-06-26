@@ -69,8 +69,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     color: Colors.pinkAccent,
                   ),
                   orderStatus == "ended"
-                      ? Image.asset("assets/delivered.png")
-                      : Image.asset("assets/state.png"),
+                      ? Image.asset("assets/delivered.jpg")
+                      : Image.asset("assets/packing.jpg"),
                   const Divider(
                     thickness: 2,
                     color: Colors.pinkAccent,

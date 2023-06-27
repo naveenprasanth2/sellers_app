@@ -70,7 +70,7 @@ class _LoginTabPageState extends State<LoginTabPage> {
           await sharedPreferences!
               .setString("address", record.data()!["address"]);
           await sharedPreferences!
-              .setDouble("earnings", record.data()!["earnings"])
+              .setDouble("earnings", double.parse(record.data()!["earnings"]))
               .then((value) => Navigator.push(context,
                   MaterialPageRoute(builder: (c) => const SplashScreen())));
         } else {

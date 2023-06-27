@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sellers_app/brandsScreens/home_screen.dart';
+import 'package:sellers_app/earningsScreen/earnings_screen.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/helper/sizebox_helper.dart';
 import 'package:sellers_app/orderScreens/orders_screen.dart';
 import 'package:sellers_app/splashScreen/splash_screen.dart';
 
+import '../history/history.dart';
 import '../shiftedOrders/shifted_orders_screen.dart';
 
 class MyDrawer extends StatelessWidget {
@@ -79,6 +81,27 @@ class MyDrawer extends StatelessWidget {
                     thickness: 1,
                   ),
 
+                  ListTile(
+                    leading: const Icon(
+                      Icons.currency_rupee  ,
+                      color: Colors.grey,
+                    ),
+                    title: const Text(
+                      "Earnings",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const EarningsScreen()));
+                    },
+                  ),
+                  const Divider(
+                    height: 10,
+                    color: Colors.grey,
+                    thickness: 1,
+                  ),
                   //my_orders
                   ListTile(
                     leading: const Icon(
@@ -86,7 +109,7 @@ class MyDrawer extends StatelessWidget {
                       color: Colors.grey,
                     ),
                     title: const Text(
-                      "My Orders",
+                      "New Orders",
                       style: TextStyle(color: Colors.grey),
                     ),
                     onTap: () {
@@ -134,24 +157,12 @@ class MyDrawer extends StatelessWidget {
                       "History",
                       style: TextStyle(color: Colors.grey),
                     ),
-                    onTap: () {},
-                  ),
-                  const Divider(
-                    height: 10,
-                    color: Colors.grey,
-                    thickness: 1,
-                  ),
-                  //search button
-                  ListTile(
-                    leading: const Icon(
-                      Icons.search,
-                      color: Colors.grey,
-                    ),
-                    title: const Text(
-                      "Search",
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (e) => const HistoryScreen()));
+                    },
                   ),
                   const Divider(
                     height: 10,

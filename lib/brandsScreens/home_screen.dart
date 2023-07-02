@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellers_app/brandsScreens/brands_ui_design_widget.dart';
@@ -8,7 +9,9 @@ import 'package:sellers_app/push_notifications/push_notifications_system.dart';
 import 'package:sellers_app/widgets/my_drawer.dart';
 import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
+import '../functions/functions.dart';
 import '../models/brands.dart';
+import '../splashScreen/splash_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,12 +24,31 @@ class _HomeScreenState extends State<HomeScreen> {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   getSellerEarningsFromDatabase() {
-    _firebaseFirestore.collection("sellers")
+    _firebaseFirestore
+        .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
-        .get().then((dataSnapshot) {
+        .get()
+        .then((dataSnapshot) {
       previousEarnings = dataSnapshot.data()!["earnings"].toString();
+    }).whenComplete(() => getSellerEarningsFromDatabase());
+  }
+
+  restrictBlockedSellersFromUsingSellersApp() async {
+    await _firebaseFirestore
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!["status"] != "approved") {
+        showReusableSnackBar(
+            context, "You are blocked \n Please contact admin", Colors.red);
+        FirebaseAuth.instance.signOut();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (e) => const SplashScreen()));
+      }
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -35,8 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
     pushNotificationSystem.generateDeviceRecognitionToken();
     //context is sent from the home screen
     pushNotificationSystem.whenNotificationReceived(context);
-    getSellerEarningsFromDatabase();
+    restrictBlockedSellersFromUsingSellersApp();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       Brands brandsModel = Brands.fromJson(
                           dataSnapShot.data.docs[index].data()
-                          as Map<String, dynamic>);
+                              as Map<String, dynamic>);
                       return BrandsUiDesignWidget(
                         context: context,
                         model: brandsModel,
@@ -108,8 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   //as we are using slivers make sure using sliverToBoxAdapter
                   return const SliverToBoxAdapter(
                       child: Center(
-                        child: Text("No brands exists"),
-                      ));
+                    child: Text("No brands exists"),
+                  ));
                 }
               },
             )

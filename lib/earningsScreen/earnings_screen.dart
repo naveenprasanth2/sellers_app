@@ -40,6 +40,7 @@ class _EarningsScreenState extends State<EarningsScreen> {
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "₹ $earnings",
@@ -64,8 +65,29 @@ class _EarningsScreenState extends State<EarningsScreen> {
                 ),
               ),
               SizedBoxHelper.sizeBox40,
-              ListTile(
-                leading: Icon(Icons.arrow_back),
+              Card(
+                color: Colors.pinkAccent,
+                margin: const EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: 100,
+                ),
+                child: ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  leading: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  title: const Text(
+                    "Go Back",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

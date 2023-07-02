@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/helper/sizebox_helper.dart';
 
@@ -22,6 +25,57 @@ class AddressDesign extends StatelessWidget {
       this.sellerId,
       this.orderByUser,
       this.totalAmount});
+
+  sendNotificationToUser(String userUid, String orderId) async {
+    String sellerDeviceToken = "";
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userUid)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!["userDeviceToken"] != null) {
+        sellerDeviceToken = snapshot.data()!["userDeviceToken"].toString();
+      }
+
+      notificationFormat(
+          sellerDeviceToken, orderId, sharedPreferences!.getString("name"));
+    });
+  }
+
+  notificationFormat(String userDeviceToken, String orderId, String? name) {
+    //all these things are as per fcm documentation, don't deviate
+    Map<String, String> headerNotification = {
+      'Content-Type': 'application/json',
+      'Authorization': fcmServerToken,
+    };
+
+    Map<String, String> bodyNotification = {
+      'body':
+      'Dear User, new order number (# $orderId) has been shipped by $name \n You will receive it soon',
+      'title': 'Parcel Shifted'
+    };
+
+    Map dataMap = {
+      'click_action': "FLUTTER_NOTIFICATION_CLICK",
+      'id': '1',
+      'status': 'done',
+      'userOrderId': orderId
+    };
+
+    Map officialNotificationFormat = {
+      'notification': bodyNotification,
+      'data': dataMap,
+      'priority': 'high',
+      'to': userDeviceToken
+    };
+    //comes from http dependency
+    post(
+      //uri is as per documentation
+        Uri.parse("https://fcm.googleapis.com/fcm/send"),
+        headers: headerNotification,
+        body: jsonEncode(officialNotificationFormat)
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +178,7 @@ class AddressDesign extends StatelessWidget {
                       .update({"status": "shifted"});
                 }).whenComplete(() {
                   //todo notification to the user
+                  sendNotificationToUser(orderByUser! , orderId!);
                   Fluttertoast.showToast(msg: "Order status updated successfully");
                   Navigator.pop(context);
                 });

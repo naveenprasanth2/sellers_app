@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellers_app/brandsScreens/brands_ui_design_widget.dart';
 import 'package:sellers_app/brandsScreens/upload_brands_screen.dart';
 import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/push_notifications/push_notifications_system.dart';
 import 'package:sellers_app/widgets/my_drawer.dart';
 import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
@@ -30,6 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
+    pushNotificationSystem.generateDeviceRecognitionToken();
+    pushNotificationSystem.whenNotificationReceived();
     getSellerEarningsFromDatabase();
   }
   @override

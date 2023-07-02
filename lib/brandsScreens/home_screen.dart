@@ -33,7 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     PushNotificationSystem pushNotificationSystem = PushNotificationSystem();
     pushNotificationSystem.generateDeviceRecognitionToken();
-    pushNotificationSystem.whenNotificationReceived();
+    //context is sent from the home screen
+    pushNotificationSystem.whenNotificationReceived(context);
     getSellerEarningsFromDatabase();
   }
   @override

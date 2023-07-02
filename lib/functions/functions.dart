@@ -5,7 +5,7 @@ showReusableSnackBar(BuildContext context, String text, Color color) {
     content: Text(
       text,
       style: const TextStyle(
-        fontSize: 36,
+        fontSize: 16,
         color: Colors.white,
       ),
     ),
